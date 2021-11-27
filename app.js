@@ -7,4 +7,6 @@ app.get("/", (req, res) => {
 
 app.listen(3100, () => {
   console.log("Server is now running!");
-})
+});
+
+module.exports = app;
