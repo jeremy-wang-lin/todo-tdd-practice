@@ -21,11 +21,10 @@ beforeAll(async () => {
 
 afterAll(async () => {
   mongoose.disconnect();
-  await new Promise(resolve => setTimeout(() => resolve(), 10000)); // avoid jest open handle error
+  await new Promise((resolve) => setTimeout(() => resolve(), 5000)); // avoid jest open handle error
 });
 
 describe(endpointUrl, () => {
-
   afterEach(async () => {
     await todoModel.deleteMany();
   });
@@ -36,4 +35,19 @@ describe(endpointUrl, () => {
     expect(response.body.title).toBe(newTodo.title);
     expect(response.body.done).toBe(newTodo.done);
   });
+
+  it(
+    "should return error 500 on malformed data with POST" + endpointUrl,
+    async () => {
+      const response = await request
+        .post(endpointUrl)
+        .send({ title: "Missing done property" });
+
+      expect(response.statusCode).toBe(500);
+      expect(response.body).toStrictEqual({
+        message:
+          "Todo validation failed: done: Path `done` is required.",
+      });
+    }
+  );
 });
