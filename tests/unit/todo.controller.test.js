@@ -111,7 +111,7 @@ describe("TodoController.getTodoById", () => {
 
   it("should return json body and response code 200", async () => {
     TodoModel.findById.mockReturnValue(existingTodo);
-    
+
     await TodoController.getTodoById(req, res, next);
 
     expect(res._getJSONData()).toStrictEqual(existingTodo);
@@ -120,12 +120,21 @@ describe("TodoController.getTodoById", () => {
   });
 
   it("should handle error", async () => {
-    const error = { message: "error when finding todo by ID"};
+    const error = { message: "error when finding todo by ID" };
     const rejectedPromise = Promise.reject(error);
     TodoModel.findById.mockReturnValue(rejectedPromise);
 
     await TodoController.getTodoById(req, res, next);
 
     expect(next).toBeCalledWith(error);
-  })
+  });
+
+  it("should return 404 when item does not exist", async () => {
+    TodoModel.findById.mockReturnValue(null);
+
+    await TodoController.getTodoById(req, res, next);
+
+    expect(res.statusCode).toBe(404);
+    expect(res._isEndCalled()).toBeTruthy();
+  });
 });
