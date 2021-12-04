@@ -50,7 +50,7 @@ describe(endpointUrl, () => {
   test("GET" + endpointUrl, async () => {
     await request(app).post(endpointUrl).send(newTodo);
     const response = await request(app).get(endpointUrl);
-    
+
     expect(response.statusCode).toBe(200);
     expect(Array.isArray(response.body)).toBeTruthy();
     expect(response.body[0].title).toBeDefined();
@@ -67,5 +67,16 @@ describe(endpointUrl, () => {
     expect(response.statusCode).toBe(200);
     expect(response.body.title).toBe(firstTodo.title);
     expect(response.body.done).toBe(firstTodo.done);
-  })
+  });
+
+  it(
+    "should return 404 to GET " +
+      endpointUrl +
+      ":todoId when the todoId does not exist",
+    async () => {
+      const response  = await request(app).get(endpointUrl + "61ab42358fae12241e4b9640");
+
+      expect(response.statusCode).toBe(404);
+    }
+  );
 });
