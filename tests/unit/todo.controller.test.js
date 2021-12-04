@@ -5,6 +5,7 @@ const TodoModel = require("../../models/todo.model");
 
 const newTodo = require("../mock-data/new-todo.json");
 const allTodos = require("../mock-data/all-todos.json");
+const existingTodo = require("../mock-data/existing-todo.json");
 
 TodoModel.create = jest.fn();
 TodoModel.find = jest.fn();
@@ -107,4 +108,24 @@ describe("TodoController.getTodoById", () => {
 
     expect(TodoModel.findById).toBeCalledWith("61aa0d078fae12241e4b9646");
   });
+
+  it("should return json body and response code 200", async () => {
+    TodoModel.findById.mockReturnValue(existingTodo);
+    
+    await TodoController.getTodoById(req, res, next);
+
+    expect(res._getJSONData()).toStrictEqual(existingTodo);
+    expect(res.statusCode).toBe(200);
+    expect(res._isEndCalled()).toBeTruthy();
+  });
+
+  it("should handle error", async () => {
+    const error = { message: "error when finding todo by ID"};
+    const rejectedPromise = Promise.reject(error);
+    TodoModel.findById.mockReturnValue(rejectedPromise);
+
+    await TodoController.getTodoById(req, res, next);
+
+    expect(next).toBeCalledWith(error);
+  })
 });
