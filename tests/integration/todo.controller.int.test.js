@@ -19,15 +19,12 @@ jest.setTimeout(10000);
 //});
 //
 afterAll(async () => {
+  await todoModel.deleteMany();
   mongoose.disconnect();
   await new Promise((resolve) => setTimeout(() => resolve(), 2000)); // avoid jest open handle error
 });
 
 describe(endpointUrl, () => {
-  afterEach(async () => {
-    await todoModel.deleteMany();
-  });
-
   test("POST" + endpointUrl, async () => {
     const response = await request(app).post(endpointUrl).send(newTodo);
 
@@ -60,5 +57,15 @@ describe(endpointUrl, () => {
     expect(response.body[0].title).toBe(newTodo.title);
     expect(response.body[0].done).toBeDefined();
     expect(response.body[0].done).toBe(newTodo.done);
+
+    firstTodo = response.body[0];
   });
+
+  test("GET" + endpointUrl + ":todoId", async () => {
+    const response = await request(app).get(endpointUrl + firstTodo._id);
+
+    expect(response.statusCode).toBe(200);
+    expect(response.body.title).toBe(firstTodo.title);
+    expect(response.body.done).toBe(firstTodo.done);
+  })
 });
