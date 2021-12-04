@@ -8,16 +8,16 @@ const newTodo = require("../mock-data/new-todo.json");
 const endpointUrl = "/todos/";
 
 jest.setTimeout(10000);
-beforeAll(async () => {
-  const dbUrl =
-    "mongodb+srv://jeremy:czj44WxD8Sbkf5mM@cluster0.nqbnx.mongodb.net/todo-tdd?retryWrites=true&w=majority";
-  try {
-    await mongoose.connect(dbUrl);
-  } catch (err) {
-    console.log(err);
-  }
-});
-
+//beforeAll(async () => {
+//  const dbUrl =
+//    "mongodb+srv://jeremy:czj44WxD8Sbkf5mM@cluster0.nqbnx.mongodb.net/todo-tdd?retryWrites=true&w=majority";
+//  try {
+//    await mongoose.connect(dbUrl);
+//  } catch (err) {
+//    console.log(err);
+//  }
+//});
+//
 afterAll(async () => {
   mongoose.disconnect();
   await new Promise((resolve) => setTimeout(() => resolve(), 2000)); // avoid jest open handle error
