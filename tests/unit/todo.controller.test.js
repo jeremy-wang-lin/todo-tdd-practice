@@ -168,4 +168,14 @@ describe("TodoController.updateTodo", () => {
     expect(res.statusCode).toBe(200);
     expect(res._isEndCalled()).toBeTruthy();
   });
+
+  it("should handle error", async () => {
+    const error = { message: "error when updating todo by ID" };
+    const rejectedPromise = Promise.reject(error);
+    TodoModel.findByIdAndUpdate.mockReturnValue(rejectedPromise);
+    
+    await TodoController.updateTodo(req, res, next);
+
+    expect(next).toBeCalledWith(error);
+  });
 });
