@@ -111,7 +111,7 @@ describe("TodoController.getTodoById", () => {
     expect(TodoModel.findById).toBeCalledWith(todoId);
   });
 
-  it("should return json body and response code 200", async () => {
+  it("should return json body in response and response code 200", async () => {
     TodoModel.findById.mockReturnValue(existingTodo);
 
     await TodoController.getTodoById(req, res, next);
@@ -156,5 +156,16 @@ describe("TodoController.updateTodo", () => {
       new: true,
       useFindAndModify: false,
     });
+  });
+
+  it("should return json body in response and response code 200", async () => {
+    req.params.todoId = todoId;
+    TodoModel.findByIdAndUpdate.mockReturnValue(newTodo);
+
+    await TodoController.updateTodo(req, res, next);
+
+    expect(res._getJSONData()).toStrictEqual(newTodo);
+    expect(res.statusCode).toBe(200);
+    expect(res._isEndCalled()).toBeTruthy();
   });
 });
