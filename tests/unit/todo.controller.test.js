@@ -138,3 +138,9 @@ describe("TodoController.getTodoById", () => {
     expect(res._isEndCalled()).toBeTruthy();
   });
 });
+
+describe("TodoController.updateTodo", () => {
+  it("should have a updateTodo function", () => {
+    expect(typeof TodoController.updateTodo).toBe("function");
+  });
+});

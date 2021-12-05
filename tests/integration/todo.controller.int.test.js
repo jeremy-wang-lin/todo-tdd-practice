@@ -25,7 +25,7 @@ afterAll(async () => {
 });
 
 describe(endpointUrl, () => {
-  test("POST" + endpointUrl, async () => {
+  test("POST " + endpointUrl, async () => {
     const response = await request(app).post(endpointUrl).send(newTodo);
 
     expect(response.statusCode).toBe(201);
@@ -47,8 +47,10 @@ describe(endpointUrl, () => {
     }
   );
 
-  test("GET" + endpointUrl, async () => {
+  test("GET " + endpointUrl, async () => {
+    await todoModel.deleteMany();
     await request(app).post(endpointUrl).send(newTodo);
+
     const response = await request(app).get(endpointUrl);
 
     expect(response.statusCode).toBe(200);
