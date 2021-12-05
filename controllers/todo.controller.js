@@ -46,6 +46,11 @@ exports.updateTodo = async (req, res, next) => {
       }
     );
 
+    if (!updatedTodo) {
+      res.status(404).send();
+      return;
+    }
+
     res.status(200).json(updatedTodo);
   } catch (err) {
     return next(err);

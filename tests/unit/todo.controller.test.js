@@ -131,7 +131,7 @@ describe("TodoController.getTodoById", () => {
     expect(next).toBeCalledWith(error);
   });
 
-  it("should return 404 when item does not exist", async () => {
+  it("should return 404 when the item does not exist", async () => {
     TodoModel.findById.mockReturnValue(null);
 
     await TodoController.getTodoById(req, res, next);
@@ -173,9 +173,18 @@ describe("TodoController.updateTodo", () => {
     const error = { message: "error when updating todo by ID" };
     const rejectedPromise = Promise.reject(error);
     TodoModel.findByIdAndUpdate.mockReturnValue(rejectedPromise);
-    
+
     await TodoController.updateTodo(req, res, next);
 
     expect(next).toBeCalledWith(error);
+  });
+
+  it("should return 404 when the item does not exist", async () => {
+    TodoModel.findByIdAndUpdate.mockReturnValue(null);
+
+    await TodoController.updateTodo(req, res, next);
+
+    expect(res.statusCode).toBe(404);
+    expect(res._isEndCalled()).toBeTruthy();
   });
 });
