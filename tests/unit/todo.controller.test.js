@@ -10,7 +10,9 @@ const existingTodo = require("../mock-data/existing-todo.json");
 TodoModel.create = jest.fn();
 TodoModel.find = jest.fn();
 TodoModel.findById = jest.fn();
+TodoModel.findByIdAndUpdate = jest.fn();
 
+const todoId = "61aa0d078fae12241e4b9646";
 let req, res, next;
 beforeEach(() => {
   req = httpMocks.createRequest();
@@ -102,11 +104,11 @@ describe("TodoController.getTodoById", () => {
   });
 
   it("should call TodoModel.findById", async () => {
-    req.params.todoId = "61aa0d078fae12241e4b9646";
+    req.params.todoId = todoId;
 
     await TodoController.getTodoById(req, res, next);
 
-    expect(TodoModel.findById).toBeCalledWith("61aa0d078fae12241e4b9646");
+    expect(TodoModel.findById).toBeCalledWith(todoId);
   });
 
   it("should return json body and response code 200", async () => {
@@ -142,5 +144,17 @@ describe("TodoController.getTodoById", () => {
 describe("TodoController.updateTodo", () => {
   it("should have a updateTodo function", () => {
     expect(typeof TodoController.updateTodo).toBe("function");
+  });
+
+  it("should update with TodoModel.findByIdAndUpdate", async () => {
+    req.params.todoId = todoId;
+    req.body = newTodo;
+
+    await TodoController.updateTodo(req, res, next);
+
+    expect(TodoModel.findByIdAndUpdate).toBeCalledWith(todoId, newTodo, {
+      new: true,
+      useFindAndModify: false,
+    });
   });
 });
