@@ -63,7 +63,7 @@ describe(endpointUrl, () => {
     firstTodo = response.body[0];
   });
 
-  test("GET" + endpointUrl + ":todoId", async () => {
+  test("GET " + endpointUrl + ":todoId", async () => {
     const response = await request(app).get(endpointUrl + firstTodo._id);
 
     expect(response.statusCode).toBe(200);
@@ -76,7 +76,34 @@ describe(endpointUrl, () => {
       endpointUrl +
       ":todoId when the todoId does not exist",
     async () => {
-      const response  = await request(app).get(endpointUrl + "61ab42358fae12241e4b9640");
+      const response = await request(app).get(
+        endpointUrl + "61ab42358fae12241e4b9640"
+      );
+
+      expect(response.statusCode).toBe(404);
+    }
+  );
+
+  test("PUT " + endpointUrl, async () => {
+    const updatedTodo = { title: firstTodo.title, done: true };
+
+    const response = await request(app)
+      .put(endpointUrl + firstTodo._id)
+      .send(updatedTodo);
+
+    expect(response.statusCode).toBe(200);
+    expect(response.body.title).toBe(updatedTodo.title);
+    expect(response.body.done).toBe(updatedTodo.done);
+  });
+
+  it(
+    "should return 404 to PUT " +
+      endpointUrl +
+      ":todoId when the todoId does not exist",
+    async () => {
+      const response = await request(app).put(
+        endpointUrl + "61ab42358fae12241e4b9640"
+      );
 
       expect(response.statusCode).toBe(404);
     }
